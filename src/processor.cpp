@@ -1,7 +1,6 @@
 #include "processor.h"
 #include <cmath>
 
-
 Processor *Processor::instance()
 {
     static Processor *instance = new Processor;
@@ -10,6 +9,8 @@ Processor *Processor::instance()
 
 void Processor::evaluate(Button::ButtonType type)
 {
+    Argument tempDisplay;
+    Argument *displayValue = &m_rightValue;
     switch(type) {
     case Button::ButtonType::DigitZero:
         m_rightValue.addDigit(0);
@@ -48,62 +49,104 @@ void Processor::evaluate(Button::ButtonType type)
         break;
     case Button::ButtonType::Back:
         m_rightValue.m_value = (m_rightValue.m_value) / 10;
-        m_rightValue.m_radixCount--;
+        m_rightValue.update();
         break;
-    case Button::ButtonType::Percent:
-        m_rightValue.m_value = m_rightValue.m_value  / 100;
-        m_rightValue.m_radixCount = m_rightValue.m_radixCount - 10;
-        break;
-    case Button::ButtonType::Dot:
-        m_rightValue.addDot();
+    case Button::ButtonType::Point:
+        m_rightValue.addPoint();
         break;
     case Button::ButtonType::Negative:
         m_rightValue.m_value = -m_rightValue.m_value;
         break;
     case Button::ButtonType::Plus:
     case Button::ButtonType::Minus:
-    case Button::ButtonType::Equal:
     case Button::ButtonType::Multiplication:
     case Button::ButtonType::Division:
+        if (!m_rightValue.m_expectRightArg)
+        {
+            doOperation();
+            m_operation = type;
+            m_rightValue = m_leftValue;
+            m_rightValue.m_expectRightArg = true;
+        }
+        else
+        {
+            m_operation = type;
+            displayValue = nullptr;
+        }
+        break;
+    case Button::ButtonType::Percent:
+        if (!m_rightValue.m_expectRightArg &&  m_rightValue.m_value != 0 && m_rightValue.m_signsCount < MAX_RADIX_COUNT)
+        {
+            switch(m_operation) {
+            case Button::ButtonType::Plus:
+            case Button::ButtonType::Minus:
+                tempDisplay = m_rightValue;
+                tempDisplay.m_value = tempDisplay.m_value / 100;
+                tempDisplay.update();
+                displayValue = &tempDisplay;
+                m_rightValue.m_value = m_leftValue.m_value * m_rightValue.m_value / 100;
+                m_rightValue.update();
+                break;
+            default:
+                m_rightValue.m_value = m_rightValue.m_value  / 100;
+                m_rightValue.update();
+                break;
+            }
+        }
+        else
+        {
+            displayValue = nullptr;
+        }
+        break;
+    case Button::ButtonType::Equal:
         doOperation();
-        m_operation = (type == Button::ButtonType::Equal) ? m_operation : type;
-        m_rightValue = m_leftValue;
+        tempDisplay = m_leftValue;
+        displayValue = &tempDisplay;
         m_rightValue.m_expectRightArg = true;
         break;
-
-
     }
-    emit rightValueChanged(m_rightValue.toString(), m_rightValue.m_radixCount);
+    if(displayValue){
+        emit rightValueChanged(displayValue->toString());
+    }
 }
 
 void Processor::doOperation()
 {
     switch(m_operation) {
+    case Button::ButtonType::DigitZero:
+    case Button::ButtonType::DigitOne:
+    case Button::ButtonType::DigitTwo:
+    case Button::ButtonType::DigitThree:
+    case Button::ButtonType::DigitFour:
+    case Button::ButtonType::DigitFive:
+    case Button::ButtonType::DigitSix:
+    case Button::ButtonType::DigitSeven:
+    case Button::ButtonType::DigitEight:
+    case Button::ButtonType::DigitNine:
+    case Button::ButtonType::Point:
+    case Button::ButtonType::Back:
+    case Button::ButtonType::Cancel:
+    case Button::ButtonType::Negative:
+    case Button::ButtonType::Equal:
+        break;
     case Button::ButtonType::Plus:
-
         m_leftValue.m_value = m_leftValue.m_value + m_rightValue.m_value;
-
         break;
     case Button::ButtonType::Minus:
         m_leftValue.m_value = m_leftValue.m_value - m_rightValue.m_value;
-
         break;
     case Button::ButtonType::Multiplication:
         m_leftValue.m_value = m_leftValue.m_value * m_rightValue.m_value;
-
         break;
+    case Button::ButtonType::Division:
+        m_leftValue.m_value = m_leftValue.m_value / m_rightValue.m_value;
+        break;
+    case Button::ButtonType::Percent:
 
+        m_leftValue.m_value = m_rightValue.m_value;
+        break;
     }
-
-    if((m_leftValue.m_value - (int)m_leftValue.m_value) == 0) {
-        m_leftValue.m_exp = 0;
-    } else {
-        m_leftValue.m_exp = -1 - std::ceil(-std::log10(m_leftValue.m_value - (int)m_leftValue.m_value));
-    }
-    m_leftValue.m_radixCount = (int)std::log10((int)m_leftValue.m_value + 1);
-    if(m_leftValue.m_exp < 0) {
-        m_leftValue.m_radixCount-= m_leftValue.m_exp;
-    }
+    m_leftValue.update();
 }
 
 

@@ -2,7 +2,7 @@
 
 
 Button::Button()
-    :m_type(ButtonType::CommonType)
+    :m_type(ButtonType::DigitZero)
 {
 
 }
@@ -102,7 +102,7 @@ Button::Button(ButtonType type, QObject *parent)
         setColorActive("#04BFAD");
         setText("0");
         break;
-    case ButtonType::Dot:
+    case ButtonType::Point:
         setColor("#B0D1D8");
         setColorActive("#04BFAD");
         setText(".");
@@ -112,7 +112,6 @@ Button::Button(ButtonType type, QObject *parent)
         setColorActive("#F7E425");
         setIconPath("../icons/equal.png");
         break;
-    case ButtonType::CommonType:
     default:
         break;
     }

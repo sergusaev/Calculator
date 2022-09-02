@@ -22,8 +22,8 @@ public:
     Button::ButtonType m_operation;
     void doOperation();
 signals:
-    void leftValueChanged(const QString& strValue, int radixCount);
-    void rightValueChanged(const QString& strValue, int radixCount);
+    void leftValueChanged(const QString& strValue);
+    void rightValueChanged(const QString& strValue);
 
 private:
     Processor();

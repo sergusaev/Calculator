@@ -3,26 +3,27 @@
 
 #include <QString>
 
-static const int MAX_RADIX_COUNT = 25;
+static const int MAX_RADIX_COUNT = 15;
 
 class Argument
 {
 
 public:
     Argument();
-    Argument(double value);
+    Argument(long double value);
     ~Argument();
 
-    long double m_value;
-    int m_radixCount;
-    QString toString() const;
+    QString toString();
 
     void addDigit(int value);
-    void addDot();
+    void addPoint();
     void reset();
+    void update();
 
-    int m_exp = 0;
-    bool m_expectRightArg = false;
+    long double m_value;    // type up to 20 meaning signs
+    int m_signsCount;
+    int m_exponent;
+    bool m_expectRightArg;
 
 
 

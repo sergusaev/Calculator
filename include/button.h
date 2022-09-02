@@ -27,9 +27,8 @@ public:
         Plus,
         Cancel,
         DigitZero,
-        Dot,
-        Equal,
-        CommonType
+        Point,
+        Equal
     };
     Q_ENUM(ButtonType)
 

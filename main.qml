@@ -19,12 +19,22 @@ Window {
         id: _calc_connections
         target: Processor
 
-        function onRightValueChanged(argValue, radixCount) {
+        function onRightValueChanged(argValue) {
             console.log("onRightValueChanged signal caught")
-            console.log("argValue: " + argValue)
-            console.log("radixCount: " + radixCount)
+            console.log("argValue: " + argValue)            
             _display_text.text = argValue
-            _display.radixCount = radixCount
+            if(argValue.length <= 8) {
+                _display_text.font.pointSize = 32
+            }
+            else if(argValue.length > 8 && argValue.length <= 14) {
+                _display_text.font.pointSize = 22
+            }
+            else {
+                _display_text.font.pointSize = 14
+            }
+
+
+
 
         }
 
@@ -50,7 +60,7 @@ Window {
                     id:_display_text
                     color: "white"
                     font {
-                        pointSize: _display.radixCount > 12 ? 14 : 28
+                        pointSize: 32
                     }
                     anchors.right: parent.right
                     text: "0"

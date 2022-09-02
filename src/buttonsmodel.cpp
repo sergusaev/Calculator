@@ -15,8 +15,6 @@ ButtonsModel::~ButtonsModel()
 
 }
 
-
-
 QHash<int, QByteArray> ButtonsModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
@@ -41,9 +39,9 @@ QVariant ButtonsModel::data(const QModelIndex &index, int role) const
     }
     const Button& button {*m_buttons.at(index.row())};
     switch (role) {
-        case ButtonRoles::ButtonTypeRole: {
-            return QVariant::fromValue(button.type());
-        }
+    case ButtonRoles::ButtonTypeRole: {
+        return QVariant::fromValue(button.type());
+    }
     case ButtonRoles::ButtonTextRole: {
         return QVariant::fromValue(button.text());
     }
@@ -56,9 +54,9 @@ QVariant ButtonsModel::data(const QModelIndex &index, int role) const
     case ButtonRoles::ButtonColorActiveRole: {
         return QVariant::fromValue(button.colorActive());
     }
-        default: {
-            return true;
-        }
+    default: {
+        return true;
+    }
     }
 }
 
