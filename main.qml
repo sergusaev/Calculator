@@ -32,10 +32,12 @@ Window {
             else {
                 _display_text.font.pointSize = 14
             }
+        }
 
-
-
-
+        function onExpressionChanged(expression) {
+            console.log("onExpressionChanged signal caught")
+            console.log("expression: " + expression)
+            _display_expr_text.text = expression
         }
 
     }
@@ -47,6 +49,28 @@ Window {
 
 
         Rectangle{
+            id: _display_expr
+            z:_root_back.z + 1
+            height: 24
+            width: 340
+            color: "transparent"
+            anchors.horizontalCenter: _root_back.horizontalCenter
+            anchors.top: _root_back.top
+            anchors.topMargin: 70
+                Text {
+                    id:_display_expr_text
+                    color: "white"
+                    font {
+                        pointSize: 10
+                    }
+                    anchors.right: parent.right
+                    text: "0"
+                }
+
+
+
+        }
+        Rectangle{
             id: _display
             z:_root_back.z + 1
             height: 60
@@ -56,15 +80,15 @@ Window {
             anchors.top: _root_back.top
             anchors.topMargin: 100
             property int radixCount : 0
-                Text {
-                    id:_display_text
-                    color: "white"
-                    font {
-                        pointSize: 32
-                    }
-                    anchors.right: parent.right
-                    text: "0"
+            Text {
+                id:_display_text
+                color: "white"
+                font {
+                    pointSize: 32
                 }
+                anchors.right: parent.right
+                text: "0"
+            }
 
 
 

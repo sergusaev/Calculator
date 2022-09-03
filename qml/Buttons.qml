@@ -28,10 +28,10 @@ GridView {
                 id:_button_icon
                 anchors.centerIn: parent
                 source: buttonIconPath
-
-
             }
             onClicked: {
+
+
                 Processor.evaluate(buttonType)
             }
             onPressed: {

@@ -7,6 +7,27 @@ Processor *Processor::instance()
     return instance;
 }
 
+inline QString getStringOp(Button::ButtonType type) {
+    QString op;
+    switch(type){
+    case Button::ButtonType::Plus:
+        op = "+";
+        break;
+    case Button::ButtonType::Minus:
+        op = "-";
+        break;
+    case Button::ButtonType::Division:
+        op = "/";
+        break;
+    case Button::ButtonType::Multiplication:
+        op = "*";
+        break;
+    default:
+        break;
+    }
+    return op;
+}
+
 void Processor::evaluate(Button::ButtonType type)
 {
     Argument tempDisplay;
@@ -42,14 +63,13 @@ void Processor::evaluate(Button::ButtonType type)
     case Button::ButtonType::DigitNine:
         m_rightValue.addDigit(9);
         break;
-    case Button::ButtonType::Cancel:
+    case Button::ButtonType::Clean:
+        m_rightValue = Argument();
+        break;
+    case Button::ButtonType::AllClean:
         m_rightValue = Argument();
         m_leftValue = Argument();
         m_operation = Button::ButtonType::Plus;
-        break;
-    case Button::ButtonType::Back:
-        m_rightValue.m_value = (m_rightValue.m_value) / 10;
-        m_rightValue.update();
         break;
     case Button::ButtonType::Point:
         m_rightValue.addPoint();
@@ -67,6 +87,7 @@ void Processor::evaluate(Button::ButtonType type)
             m_operation = type;
             m_rightValue = m_leftValue;
             m_rightValue.m_expectRightArg = true;
+            m_leftValue.m_expectRightArg = true;
         }
         else
         {
@@ -84,7 +105,8 @@ void Processor::evaluate(Button::ButtonType type)
                 tempDisplay.m_value = tempDisplay.m_value / 100;
                 tempDisplay.update();
                 displayValue = &tempDisplay;
-                m_rightValue.m_value = m_leftValue.m_value * m_rightValue.m_value / 100;
+//                m_rightValue.m_value = m_leftValue.m_value * m_rightValue.m_value / 100;
+                m_rightValue.m_value = tempDisplay.m_value;
                 m_rightValue.update();
                 break;
             default:
@@ -103,10 +125,12 @@ void Processor::evaluate(Button::ButtonType type)
         tempDisplay = m_leftValue;
         displayValue = &tempDisplay;
         m_rightValue.m_expectRightArg = true;
+        m_leftValue.m_expectRightArg = false;
         break;
     }
     if(displayValue){
         emit rightValueChanged(displayValue->toString());
+        updateExpression(type);
     }
 }
 
@@ -124,8 +148,8 @@ void Processor::doOperation()
     case Button::ButtonType::DigitEight:
     case Button::ButtonType::DigitNine:
     case Button::ButtonType::Point:
-    case Button::ButtonType::Back:
-    case Button::ButtonType::Cancel:
+    case Button::ButtonType::AllClean:
+    case Button::ButtonType::Clean:
     case Button::ButtonType::Negative:
     case Button::ButtonType::Equal:
         break;
@@ -142,11 +166,56 @@ void Processor::doOperation()
         m_leftValue.m_value = m_leftValue.m_value / m_rightValue.m_value;
         break;
     case Button::ButtonType::Percent:
-
         m_leftValue.m_value = m_rightValue.m_value;
         break;
     }
     m_leftValue.update();
+}
+
+void Processor::updateExpression(Button::ButtonType type)
+{
+    switch(type) {
+    case Button::ButtonType::Plus:
+        if(!m_rightValue.m_expectRightArg) {
+            m_expression += m_rightValue.toString();
+        } else {
+            m_expression = m_leftValue.toString() + getStringOp(type);
+        }
+        break;
+    case Button::ButtonType::Minus:
+    case Button::ButtonType::Division:
+    case Button::ButtonType::Multiplication: {
+        if(m_rightValue.m_expectRightArg) {
+            m_expression = m_leftValue.toString() + getStringOp(type);
+        }
+        break;
+    }
+    case Button::ButtonType::Equal:
+        if(m_rightValue.m_value < 0) {
+            if(m_operation == Button::ButtonType::Minus) {
+                m_expression = m_rightValue.toString();
+                m_expression[0] = '+';
+            } else {
+                m_expression = getStringOp(m_operation) + "(" + m_rightValue.toString() + ")";
+            }
+        } else {
+            m_expression = getStringOp(m_operation) + m_rightValue.toString();
+        }
+        break;
+    case Button::ButtonType::AllClean:
+        m_expression = "0";
+        break;
+    case Button::ButtonType::Clean:
+        break;
+    default:
+        if(!m_leftValue.m_expectRightArg) {
+            m_expression = m_rightValue.toString();
+        } else {
+            m_expression = m_leftValue.toString() + getStringOp(m_operation) + m_rightValue.toString();
+        }
+        break;
+    }
+    emit expressionChanged(m_expression);
 }
 
 

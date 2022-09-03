@@ -9,7 +9,7 @@ class Button : public QObject
 public:
 
     enum ButtonType {
-        Back = Qt::UserRole + 2,
+        AllClean = Qt::UserRole + 2,
         Negative,
         Percent,
         Division,
@@ -25,7 +25,7 @@ public:
         DigitTwo,
         DigitThree,
         Plus,
-        Cancel,
+        Clean,
         DigitZero,
         Point,
         Equal

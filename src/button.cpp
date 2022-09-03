@@ -12,10 +12,10 @@ Button::Button(ButtonType type, QObject *parent)
 {
     Q_UNUSED(parent)
     switch(m_type) {
-    case ButtonType::Back:
-        setColor("#0889A6");
-        setColorActive("#F7E425");
-        setIconPath("../icons/chevron_left.png");
+    case ButtonType::AllClean:
+        setColor("#F25E5E");
+        setColorActive("#FFA07A");
+        setIconPath("../icons/ac.png");
         break;
     case ButtonType::Negative:
         setColor("#0889A6");
@@ -92,7 +92,7 @@ Button::Button(ButtonType type, QObject *parent)
         setColorActive("#F7E425");
         setIconPath("../icons/plus.png");
         break;
-    case ButtonType::Cancel:
+    case ButtonType::Clean:
         setColor("#F25E5E");
         setColorActive("#FFA07A");
         setIconPath("../icons/text_button.png");

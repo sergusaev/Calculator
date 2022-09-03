@@ -52,21 +52,8 @@ QString Argument::toString()
         ss<< ".";
     }
      return QString::fromStdString(ss.str());
-//    std::string tmp = ss.str();
-//    if(m_exponent >= 0 || !m_expectRightArg) {
-//        return QString::fromStdString(tmp);
-//    } else {
-//        int zeroCount = 0;
-//        for(int i = tmp.size() - 1; tmp[i] == '0'; --i) {
-//            ++zeroCount;
-//        }
-//        if(zeroCount != 0) {
-//            tmp.resize(tmp.size() - zeroCount);
-//            m_radixCount = tmp.size() - 1;
-//        }
-//        return (tmp.size()!= 0) ? QString::fromStdString(tmp) : "0";
-//    }
 }
+
 
 void Argument::addDigit(int value)
 {
