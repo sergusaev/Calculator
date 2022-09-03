@@ -10,6 +10,7 @@ Rectangle {
     signal clicked()
     signal released()
     signal pressed()
+    signal pressAndHold()
     color: "transparent"
 
 
@@ -35,6 +36,14 @@ Rectangle {
         onPressed: {
             root.pressed()
         }
+
+//        pressAndHoldInterval: 4000
+
+//        onPressAndHold: {
+//            root.pressAndHold()
+//        }
+
+
 
     }
 }

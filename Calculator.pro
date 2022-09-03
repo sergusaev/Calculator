@@ -9,7 +9,8 @@ SOURCES += \
         src/processor.cpp \
         src/button.cpp \
         src/buttonsmodel.cpp \
-        main.cpp
+        main.cpp \
+        src/secretmenuhandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,4 +31,5 @@ HEADERS += \
     include/argument.h \
     include/button.h \
     include/buttonsmodel.h \
-    include/processor.h
+    include/processor.h \
+    include/secretmenuhandler.h

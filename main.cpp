@@ -4,6 +4,7 @@
 #include "buttonsmodel.h"
 #include "processor.h"
 #include "argument.h"
+#include "secretmenuhandler.h"
 
 
 int main(int argc, char *argv[])
@@ -15,6 +16,7 @@ int main(int argc, char *argv[])
     ButtonsModel buttonsModel;
     qmlRegisterType<Button>("Button", 1, 0, "Button");
     qmlRegisterSingletonInstance("Processor", 1, 0, "Processor", Processor::instance());
+    qmlRegisterSingletonInstance("SecretMenuHandler", 1, 0, "SecretMenuHandler", SecretMenuHandler::instance());
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

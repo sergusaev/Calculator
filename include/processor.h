@@ -28,6 +28,11 @@ signals:
     void leftValueChanged(const QString& strValue);
     void rightValueChanged(const QString& strValue);
     void expressionChanged(const QString& expression);
+    void digitOneClicked();
+    void digitTwoClicked();
+    void digitThreeClicked();
+    void wrongButtonClicked();
+    Q_INVOKABLE void equalButtonLongPressed();
 
 private:
     Processor();

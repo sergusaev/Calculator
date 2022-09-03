@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include "button.h"
+#include "secretmenuhandler.h"
 
 class ButtonsModel : public QAbstractListModel
 {

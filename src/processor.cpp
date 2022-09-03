@@ -38,44 +38,57 @@ void Processor::evaluate(Button::ButtonType type)
         break;
     case Button::ButtonType::DigitOne:
         m_rightValue.addDigit(1);
+        emit digitOneClicked();
         break;
     case Button::ButtonType::DigitTwo:
         m_rightValue.addDigit(2);
+        emit digitTwoClicked();
         break;
     case Button::ButtonType::DigitThree:
         m_rightValue.addDigit(3);
+        emit digitThreeClicked();
         break;
     case Button::ButtonType::DigitFour:
         m_rightValue.addDigit(4);
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::DigitFive:
         m_rightValue.addDigit(5);
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::DigitSix:
         m_rightValue.addDigit(6);
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::DigitSeven:
         m_rightValue.addDigit(7);
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::DigitEight:
         m_rightValue.addDigit(8);
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::DigitNine:
         m_rightValue.addDigit(9);
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::Clean:
         m_rightValue = Argument();
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::AllClean:
         m_rightValue = Argument();
         m_leftValue = Argument();
         m_operation = Button::ButtonType::Plus;
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::Point:
         m_rightValue.addPoint();
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::Negative:
         m_rightValue.m_value = -m_rightValue.m_value;
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::Plus:
     case Button::ButtonType::Minus:
@@ -94,6 +107,7 @@ void Processor::evaluate(Button::ButtonType type)
             m_operation = type;
             displayValue = nullptr;
         }
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::Percent:
         if (!m_rightValue.m_expectRightArg &&  m_rightValue.m_value != 0 && m_rightValue.m_signsCount < MAX_RADIX_COUNT)
@@ -107,10 +121,12 @@ void Processor::evaluate(Button::ButtonType type)
                 displayValue = &tempDisplay;
                 m_rightValue.m_value = tempDisplay.m_value;
                 m_rightValue.update();
+                emit wrongButtonClicked();
                 break;
             default:
                 m_rightValue.m_value = m_rightValue.m_value  / 100;
                 m_rightValue.update();
+                emit wrongButtonClicked();
                 break;
             }
         }
@@ -118,6 +134,7 @@ void Processor::evaluate(Button::ButtonType type)
         {
             displayValue = nullptr;
         }
+        emit wrongButtonClicked();
         break;
     case Button::ButtonType::Equal:
         doOperation();
@@ -125,6 +142,7 @@ void Processor::evaluate(Button::ButtonType type)
         displayValue = &tempDisplay;
         m_rightValue.m_expectRightArg = true;
         m_leftValue.m_expectRightArg = false;
+        emit wrongButtonClicked();
         break;
     }
     if(displayValue){

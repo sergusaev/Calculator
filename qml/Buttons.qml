@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Button 1.0
 import Processor 1.0
+import SecretMenuHandler 1.0
 
 
 
@@ -30,18 +31,23 @@ GridView {
                 source: buttonIconPath
             }
             onClicked: {
-
-
                 Processor.evaluate(buttonType)
+//                SecretMenuHandler.equalButtonPressed()
             }
             onPressed: {
                 color = buttonColorActive
                 textColor = buttonColor === "#0889A6" ? "#FFFFFF": "#024873"
+                SecretMenuHandler.equalButtonPressed()
             }
             onReleased: {
                 color = buttonColor
                 textColor = "#FFFFFF"
+                SecretMenuHandler.equalButtonReleased()
             }
+
+//            onPressAndHold: {
+//                SecretMenuHandler.equalButtonPressAndHold()
+//            }
         }
     }
 

@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import Processor 1.0
+import SecretMenuHandler 1.0
 import "qml" as MyQml
 
 Window {
@@ -40,6 +41,28 @@ Window {
             _display_expr_text.text = expression
         }
 
+    }
+
+    Connections {
+        id: _secret_menu_handler_connections
+        target: SecretMenuHandler
+
+        function onOpenMenu(argValue) {
+            console.log("onOpenMenu signal caught")
+            _secret_menu.visible = true
+        }
+
+    }
+
+    MyQml.SecretMenuWindow {
+        id: _secret_menu
+        z: _root_back.z + 2
+        width: 320
+        height: 260
+        anchors.top: root.top
+        anchors.horizontalCenter: root.horizontalCenter
+        anchors.topMargin: 60
+        visible: false
     }
 
     Rectangle {

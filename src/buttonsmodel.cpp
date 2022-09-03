@@ -1,4 +1,5 @@
 #include "buttonsmodel.h"
+#include "processor.h"
 
 
 
@@ -8,6 +9,7 @@ ButtonsModel::ButtonsModel(QObject *parent) :
     for(Button::ButtonType i = Button::ButtonType::AllClean; (int)i < (int)Button::ButtonType::Equal + 1; i = (Button::ButtonType)((int)i + 1)) {
         m_buttons.push_back(std::make_shared<Button>(i));
     }
+
 }
 
 ButtonsModel::~ButtonsModel()
