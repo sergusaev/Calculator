@@ -11,16 +11,16 @@ inline QString getStringOp(Button::ButtonType type) {
     QString op;
     switch(type){
     case Button::ButtonType::Plus:
-        op = "+";
+        op = " + ";
         break;
     case Button::ButtonType::Minus:
-        op = "-";
+        op = " - ";
         break;
     case Button::ButtonType::Division:
-        op = "/";
+        op = " / ";
         break;
     case Button::ButtonType::Multiplication:
-        op = "*";
+        op = " * ";
         break;
     default:
         break;
@@ -105,7 +105,6 @@ void Processor::evaluate(Button::ButtonType type)
                 tempDisplay.m_value = tempDisplay.m_value / 100;
                 tempDisplay.update();
                 displayValue = &tempDisplay;
-//                m_rightValue.m_value = m_leftValue.m_value * m_rightValue.m_value / 100;
                 m_rightValue.m_value = tempDisplay.m_value;
                 m_rightValue.update();
                 break;
@@ -175,29 +174,26 @@ void Processor::doOperation()
 void Processor::updateExpression(Button::ButtonType type)
 {
     switch(type) {
+    case Button::ButtonType::Negative:
+    case Button::ButtonType::Percent:
+        if(m_leftValue.m_expectRightArg && m_rightValue.m_value < 0) {
+            m_expression = m_leftValue.toString() + getStringOp(m_operation) + "(" + m_rightValue.toString() +")";
+        }
+        break;
     case Button::ButtonType::Plus:
+    case Button::ButtonType::Minus:
+    case Button::ButtonType::Division:
+    case Button::ButtonType::Multiplication:
         if(!m_rightValue.m_expectRightArg) {
             m_expression += m_rightValue.toString();
         } else {
             m_expression = m_leftValue.toString() + getStringOp(type);
         }
         break;
-    case Button::ButtonType::Minus:
-    case Button::ButtonType::Division:
-    case Button::ButtonType::Multiplication: {
-        if(m_rightValue.m_expectRightArg) {
-            m_expression = m_leftValue.toString() + getStringOp(type);
-        }
-        break;
-    }
+
     case Button::ButtonType::Equal:
         if(m_rightValue.m_value < 0) {
-            if(m_operation == Button::ButtonType::Minus) {
-                m_expression = m_rightValue.toString();
-                m_expression[0] = '+';
-            } else {
-                m_expression = getStringOp(m_operation) + "(" + m_rightValue.toString() + ")";
-            }
+            m_expression = getStringOp(m_operation) + "(" + m_rightValue.toString() + ")";
         } else {
             m_expression = getStringOp(m_operation) + m_rightValue.toString();
         }
