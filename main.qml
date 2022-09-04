@@ -30,8 +30,10 @@ Window {
             else if(argValue.length > 8 && argValue.length <= 14) {
                 _display_text.font.pointSize = 22
             }
-            else {
+            else  if (argValue.length > 14 && argValue.length <= 21){
                 _display_text.font.pointSize = 14
+            } else {
+                _display_text.font.pointSize = 11
             }
         }
 
@@ -84,7 +86,7 @@ Window {
                     id:_display_expr_text
                     color: "white"
                     font {
-                        pointSize: 10
+                        pointSize: 7
                     }
                     anchors.right: parent.right
                     text: "0"

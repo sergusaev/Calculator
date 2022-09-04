@@ -3,17 +3,17 @@
 #include <cmath>
 #include <iomanip>
 
-inline long double fractional(long double value)
+inline ttmath::Big<1,2> fractional(ttmath::Big<1,2> value)
 {
-    return value - (long long)value;
+    return value - (ttmath::Big<1,2>)value;
 }
 
-inline int decimalsFromVal(long double value)
+inline int decimalsFromVal(ttmath::Big<1,2> value)
 {
     int d = 1;
-    long long mul = 10;
-    long long tolerance = 1000000000000000;
-    for (; d < 15 && (long long)(fractional(value * mul) * tolerance); ++d) {
+    ttmath::Big<1,2> mul = 10;
+    ttmath::Big<1,2> tolerance = "1000000000000000000000000";
+    for (; d < 25 && static_cast<ttmath::Big<1,2>>(fractional(value * mul) * tolerance) != 0; ++d) {
         mul *= 10;
         tolerance /= 10;
     }
@@ -26,7 +26,7 @@ Argument::Argument()
     reset();
 }
 
-Argument::Argument(long double value)
+Argument::Argument(ttmath::Big<1, 2> value)
 
 {
     reset();
@@ -106,12 +106,14 @@ void Argument::reset()
 
 void Argument::update()
 {
-    if((m_value - (long long)m_value) == 0) {
+    if((m_value - (ttmath::Big<1,2>)m_value) == 0) {
         m_exponent = 0;
     } else {
         m_exponent = fractional(m_value) == 0 ? 0 : -1 - decimalsFromVal(m_value);
     }
-    m_signsCount = (int)std::log10((int)m_value + 1);
+    std::stringstream ss;
+    ss << m_value;
+    m_signsCount = ss.str().size();
     if(m_exponent < 0) {
         m_signsCount -= m_exponent;
     }

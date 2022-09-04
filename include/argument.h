@@ -2,15 +2,16 @@
 #define ARGUMENT_H
 
 #include <QString>
+#include <ttmath/ttmath.h>
 
-static const int MAX_RADIX_COUNT = 15;
+static const int MAX_RADIX_COUNT = 25;
 
 class Argument
 {
 
 public:
     Argument();
-    Argument(long double value);
+    Argument(ttmath::Big<1,2> value);
     ~Argument();
 
     QString toString();
@@ -20,7 +21,7 @@ public:
     void reset();
     void update();
 
-    long double m_value;    // type up to 20 meaning signs
+    ttmath::Big<1,2> m_value;    // type up to 20 meaning signs
     int m_signsCount;
     int m_exponent;
     bool m_expectRightArg;
