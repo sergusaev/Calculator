@@ -1,4 +1,5 @@
 #include "processor.h"
+#include "secretmenuhandler.h"
 #include <cmath>
 
 Processor *Processor::instance()
@@ -34,61 +35,91 @@ void Processor::evaluate(Button::ButtonType type)
     Argument *displayValue = &m_rightValue;
     switch(type) {
     case Button::ButtonType::DigitZero:
-        m_rightValue.addDigit(0);
+        m_rightValue.addDigit('0');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::DigitOne:
-        m_rightValue.addDigit(1);
-        emit digitOneClicked();
+        m_rightValue.addDigit('1');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit digitOneClicked();
+        }
         break;
     case Button::ButtonType::DigitTwo:
-        m_rightValue.addDigit(2);
-        emit digitTwoClicked();
+        m_rightValue.addDigit('2');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit digitTwoClicked();
+        }
         break;
     case Button::ButtonType::DigitThree:
-        m_rightValue.addDigit(3);
-        emit digitThreeClicked();
+        m_rightValue.addDigit('3');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit digitThreeClicked();
+        }
         break;
     case Button::ButtonType::DigitFour:
-        m_rightValue.addDigit(4);
-        emit wrongButtonClicked();
+        m_rightValue.addDigit('4');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
-    case Button::ButtonType::DigitFive:
-        m_rightValue.addDigit(5);
-        emit wrongButtonClicked();
+    case Button::ButtonType::DigitFive: {
+        m_rightValue.addDigit('5');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
+    }
     case Button::ButtonType::DigitSix:
-        m_rightValue.addDigit(6);
-        emit wrongButtonClicked();
+        m_rightValue.addDigit('6');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::DigitSeven:
-        m_rightValue.addDigit(7);
-        emit wrongButtonClicked();
+        m_rightValue.addDigit('7');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::DigitEight:
-        m_rightValue.addDigit(8);
-        emit wrongButtonClicked();
+        m_rightValue.addDigit('8');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::DigitNine:
-        m_rightValue.addDigit(9);
-        emit wrongButtonClicked();
+        m_rightValue.addDigit('9');
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::Clean:
         m_rightValue = Argument();
-        emit wrongButtonClicked();
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::AllClean:
         m_rightValue = Argument();
         m_leftValue = Argument();
         m_operation = Button::ButtonType::Plus;
-        emit wrongButtonClicked();
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::Point:
         m_rightValue.addPoint();
-        emit wrongButtonClicked();
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::Negative:
         m_rightValue.m_value = -m_rightValue.m_value;
-        emit wrongButtonClicked();
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     case Button::ButtonType::Plus:
     case Button::ButtonType::Minus:
@@ -110,23 +141,28 @@ void Processor::evaluate(Button::ButtonType type)
         emit wrongButtonClicked();
         break;
     case Button::ButtonType::Percent:
-        if (!m_rightValue.m_expectRightArg &&  m_rightValue.m_value != 0 && m_rightValue.m_signsCount < MAX_RADIX_COUNT)
+        if (!m_rightValue.m_expectRightArg &&  m_rightValue.m_value != 0 && m_rightValue.m_valueString.size() < MAX_RADIX_COUNT)
         {
             switch(m_operation) {
             case Button::ButtonType::Plus:
             case Button::ButtonType::Minus:
                 tempDisplay = m_rightValue;
-                tempDisplay.m_value = tempDisplay.m_value / 100;
-                tempDisplay.update();
+//                tempDisplay.m_value = tempDisplay.m_value / 100;
+                tempDisplay = Argument(tempDisplay.m_value /= 100);
                 displayValue = &tempDisplay;
-                m_rightValue.m_value = tempDisplay.m_value;
-                m_rightValue.update();
-                emit wrongButtonClicked();
+//                m_rightValue.m_value = tempDisplay.m_value;
+                m_rightValue = Argument(tempDisplay.m_value) ;
+//                m_rightValue.update();
+                if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+                    emit wrongButtonClicked();
+                }
                 break;
             default:
                 m_rightValue.m_value = m_rightValue.m_value  / 100;
                 m_rightValue.update();
-                emit wrongButtonClicked();
+                if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+                    emit wrongButtonClicked();
+                }
                 break;
             }
         }
@@ -134,7 +170,7 @@ void Processor::evaluate(Button::ButtonType type)
         {
             displayValue = nullptr;
         }
-        emit wrongButtonClicked();
+
         break;
     case Button::ButtonType::Equal:
         doOperation();
@@ -142,7 +178,9 @@ void Processor::evaluate(Button::ButtonType type)
         displayValue = &tempDisplay;
         m_rightValue.m_expectRightArg = true;
         m_leftValue.m_expectRightArg = false;
-        emit wrongButtonClicked();
+        if(!(SecretMenuHandler::instance()->openingState() == OpeningState::InactiveState)) {
+            emit wrongButtonClicked();
+        }
         break;
     }
     if(displayValue){
@@ -153,6 +191,8 @@ void Processor::evaluate(Button::ButtonType type)
 
 void Processor::doOperation()
 {
+    double leftVal = (&m_leftValue.m_value)->ToDouble();
+    double rightVal = (&m_rightValue.m_value)->ToDouble();
     switch(m_operation) {
     case Button::ButtonType::DigitZero:
     case Button::ButtonType::DigitOne:
@@ -171,22 +211,27 @@ void Processor::doOperation()
     case Button::ButtonType::Equal:
         break;
     case Button::ButtonType::Plus:
-        m_leftValue.m_value = m_leftValue.m_value + m_rightValue.m_value;
+//        m_leftValue.m_value = m_leftValue.m_value + m_rightValue.m_value;
+        m_leftValue = Argument(m_leftValue.m_value + m_rightValue.m_value);
         break;
     case Button::ButtonType::Minus:
-        m_leftValue.m_value = m_leftValue.m_value - m_rightValue.m_value;
+//        m_leftValue.m_value = m_leftValue.m_value - m_rightValue.m_value;
+        m_leftValue = Argument(m_leftValue.m_value - m_rightValue.m_value);
         break;
     case Button::ButtonType::Multiplication:
-        m_leftValue.m_value = m_leftValue.m_value * m_rightValue.m_value;
+//        m_leftValue.m_value = m_leftValue.m_value * m_rightValue.m_value;
+        m_leftValue = Argument(m_leftValue.m_value * m_rightValue.m_value);
         break;
     case Button::ButtonType::Division:
-        m_leftValue.m_value = m_leftValue.m_value / m_rightValue.m_value;
+//        m_leftValue.m_value = m_leftValue.m_value / m_rightValue.m_value;
+        m_leftValue = Argument(m_leftValue.m_value / m_rightValue.m_value);
         break;
     case Button::ButtonType::Percent:
-        m_leftValue.m_value = m_rightValue.m_value;
+//        m_leftValue.m_value = m_rightValue.m_value;
+        m_leftValue = m_rightValue;
         break;
     }
-    m_leftValue.update();
+
 }
 
 void Processor::updateExpression(Button::ButtonType type)

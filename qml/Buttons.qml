@@ -30,24 +30,27 @@ GridView {
                 anchors.centerIn: parent
                 source: buttonIconPath
             }
-            onClicked: {
-                Processor.evaluate(buttonType)
-//                SecretMenuHandler.equalButtonPressed()
-            }
+
             onPressed: {
                 color = buttonColorActive
                 textColor = buttonColor === "#0889A6" ? "#FFFFFF": "#024873"
-                SecretMenuHandler.equalButtonPressed()
+                if(buttonType === Button.Equal) {
+                    SecretMenuHandler.equalButtonPressed()
+                }
+                Processor.evaluate(buttonType)
+                // SecretMenuHandler.equalButtonPressed()
             }
             onReleased: {
                 color = buttonColor
                 textColor = "#FFFFFF"
-                SecretMenuHandler.equalButtonReleased()
+                if(buttonType === Button.Equal) {
+                    SecretMenuHandler.equalButtonReleased()
+                }
             }
 
-//            onPressAndHold: {
-//                SecretMenuHandler.equalButtonPressAndHold()
-//            }
+            //            onPressAndHold: {
+            //                SecretMenuHandler.equalButtonPressAndHold()
+            //            }
         }
     }
 

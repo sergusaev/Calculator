@@ -4,7 +4,7 @@
 #include <QString>
 #include <ttmath/ttmath.h>
 
-static const int MAX_RADIX_COUNT = 25;
+static const int MAX_RADIX_COUNT = 26;
 
 class Argument
 {
@@ -16,14 +16,13 @@ public:
 
     QString toString();
 
-    void addDigit(int value);
+    void addDigit(char value);
     void addPoint();
     void reset();
     void update();
 
-    ttmath::Big<1,2> m_value;    // type up to 20 meaning signs
-    int m_signsCount;
-    int m_exponent;
+    ttmath::Big<1,2> m_value;
+    std::string m_valueString;
     bool m_expectRightArg;
 
 
