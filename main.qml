@@ -61,8 +61,8 @@ Window {
         z: _root_back.z + 2
         width: 320
         height: 260
-        anchors.top: root.top
-        anchors.horizontalCenter: root.horizontalCenter
+        anchors.top: _root_back.top
+        anchors.horizontalCenter: _root_back.horizontalCenter
         anchors.topMargin: 60
         visible: false
     }
@@ -104,7 +104,7 @@ Window {
             anchors.horizontalCenter: _root_back.horizontalCenter
             anchors.top: _root_back.top
             anchors.topMargin: 100
-            property int radixCount : 0
+
             Text {
                 id:_display_text
                 color: "white"

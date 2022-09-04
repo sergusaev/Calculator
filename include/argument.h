@@ -23,7 +23,7 @@ public:
 
     ttmath::Big<1,2> m_value;
     std::string m_valueString;
-    bool m_expectRightArg;
+    bool m_digitsEnteringInProgress;
 
 
 

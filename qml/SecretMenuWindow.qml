@@ -5,26 +5,30 @@ import QtGraphicalEffects 1.15
 
 Rectangle {
     id: root
+    color: "transparent"
 
     Rectangle {
         id: _secret_menu_window
         anchors.fill:parent
-        color: "#024873"
+        color: "#0889A6"
+        radius: 10
 
         Text {
             id:_secret_menu_window_text
             color: "white"
             font {
-                pointSize: 32
+                pointSize: 24
             }
-            anchors.right: parent.right
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 20
             text: "Secret Menu"
         }
 
         Button {
             id: _back_button
-            width: root.width / 5
-            height: width / 4
+            width: root.width / 2.8
+            height: width / 3
             text: _back_button_text.text
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -37,12 +41,15 @@ Rectangle {
                 font {
                     pointSize: 14
                 }
-                anchors.right: parent.right
+                anchors.centerIn: parent
                 text: qsTr("Back")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             background: Rectangle {
                 color: _back_button.pressed ? "#04BFAD" :"#B0D1D8"
+                radius: 10
 
             }
 

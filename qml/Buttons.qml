@@ -32,20 +32,20 @@ GridView {
             }
 
             onPressed: {
+                console.log("Button type role: ")
+                console.log(buttonType)
                 color = buttonColorActive
                 textColor = buttonColor === "#0889A6" ? "#FFFFFF": "#024873"
-                if(buttonType === Button.Equal) {
-                    SecretMenuHandler.equalButtonPressed()
-                }
+
+                SecretMenuHandler.buttonPressed(buttonType)
+
                 Processor.evaluate(buttonType)
                 // SecretMenuHandler.equalButtonPressed()
             }
             onReleased: {
                 color = buttonColor
                 textColor = "#FFFFFF"
-                if(buttonType === Button.Equal) {
-                    SecretMenuHandler.equalButtonReleased()
-                }
+                SecretMenuHandler.buttonReleased(buttonType)
             }
 
             //            onPressAndHold: {

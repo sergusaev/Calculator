@@ -6,7 +6,7 @@
 ButtonsModel::ButtonsModel(QObject *parent) :
     QAbstractListModel{parent}
 {
-    for(Button::ButtonType i = Button::ButtonType::AllClean; (int)i < (int)Button::ButtonType::Equal + 1; i = (Button::ButtonType)((int)i + 1)) {
+    for(Button::ButtonType i = Button::ButtonType::Brackets; (int)i < (int)Button::ButtonType::Equal + 1; i = (Button::ButtonType)((int)i + 1)) {
         m_buttons.push_back(std::make_shared<Button>(i));
     }
 

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDateTime>
+#include "button.h"
 
 enum OpeningState{
     InactiveState,
@@ -25,7 +26,9 @@ public:
     Q_INVOKABLE void resetOpening();
 
     Q_INVOKABLE void equalButtonPressed();
+    Q_INVOKABLE void buttonPressed(Button::ButtonType type);
     Q_INVOKABLE void equalButtonReleased();
+    Q_INVOKABLE void buttonReleased(Button::ButtonType type);
 
     quint64 beginOpeningTimestamp() const;
     void setBeginOpeningTimestamp(quint64 newBeginOpeningTimestamp);
@@ -41,10 +44,7 @@ signals:
     void beginOpeningTimestampChanged();
 
 public slots:
-    void onDigitOneClicked();
-    void onDigitTwoClicked();
-    void onDigitThreeClicked();
-    void onWrongButtonClicked();
+    void onButtonClicked(Button::ButtonType type);
 
 private:
     SecretMenuHandler(QObject *parent = nullptr);

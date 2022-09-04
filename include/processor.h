@@ -21,8 +21,11 @@ public:
 
     Argument m_rightValue;
     Argument m_leftValue;
+    Argument m_memValue;
     QString m_expression;
+    Button::ButtonType m_memOperation;
     Button::ButtonType m_operation;
+    bool m_bracketOpened;
 
 signals:
     void leftValueChanged(const QString& strValue);

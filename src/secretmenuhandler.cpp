@@ -1,5 +1,6 @@
 #include "secretmenuhandler.h"
 #include "processor.h"
+#include <QDebug>
 
 SecretMenuHandler::~SecretMenuHandler()
 {
@@ -17,10 +18,7 @@ SecretMenuHandler::SecretMenuHandler(QObject *parent)
     , m_beginOpeningTimestamp(0)
     , m_openingState(OpeningState::InactiveState)
 {
-    QObject::connect(Processor::instance(), &Processor::digitOneClicked, this, &SecretMenuHandler::onDigitOneClicked);
-    QObject::connect(Processor::instance(), &Processor::digitTwoClicked, this, &SecretMenuHandler::onDigitTwoClicked);
-    QObject::connect(Processor::instance(), &Processor::digitThreeClicked, this, &SecretMenuHandler::onDigitThreeClicked);
-    QObject::connect(Processor::instance(), &Processor::wrongButtonClicked, this, &SecretMenuHandler::onWrongButtonClicked);
+
 }
 
 quint64 SecretMenuHandler::equalButtonTimeHeld() const
@@ -41,6 +39,7 @@ OpeningState SecretMenuHandler::openingState() const
 void SecretMenuHandler::setOpeningState(OpeningState newOpeningState)
 {
     m_openingState = newOpeningState;
+    qDebug() << "Opening state = " << newOpeningState;
 }
 
 quint64 SecretMenuHandler::beginOpeningTimestamp() const
@@ -71,63 +70,65 @@ void SecretMenuHandler::equalButtonPressed()
     setEqualButtonTimeHeld(QDateTime::currentMSecsSinceEpoch());
 }
 
+void SecretMenuHandler::buttonPressed(Button::ButtonType type)
+{
+    if(type == Button::ButtonType::Equal) {
+        equalButtonPressed();
+    }
+}
+
 void SecretMenuHandler::equalButtonReleased()
 {
     quint64 currentTimeStamp = QDateTime::currentMSecsSinceEpoch();
-    setEqualButtonTimeHeld(currentTimeStamp - equalButtonTimeHeld());
-    if(equalButtonTimeHeld() >= 4000) {
+    quint64 interval = currentTimeStamp - equalButtonTimeHeld();
+    qDebug() << "Interval = " << interval;
+
+    if(interval >= 4000) {
         setOpeningState(OpeningState::InitialState);
         setBeginOpeningTimestamp(currentTimeStamp);
     }
 }
 
-void SecretMenuHandler::onDigitOneClicked()
+void SecretMenuHandler::buttonReleased(Button::ButtonType type)
 {
-    if(m_openingState == OpeningState::InactiveState) {
+    if(type == Button::ButtonType::Equal) {
+        equalButtonReleased();
+    }
+}
+
+
+void SecretMenuHandler::onButtonClicked(Button::ButtonType type)
+{
+    quint64 currentTimeElapsed = QDateTime::currentMSecsSinceEpoch() - beginOpeningTimestamp();
+    if(currentTimeElapsed > 5000)  {
+        resetOpening();
         return;
     }
-    if(m_openingState == OpeningState::InitialState) {
-        quint64 currentTimeElapsed = QDateTime::currentMSecsSinceEpoch() - beginOpeningTimestamp();
-        if(currentTimeElapsed <= 5000)  {
+    switch(type) {
+    case Button::ButtonType::DigitOne:
+        if(m_openingState == OpeningState::InitialState) {
             setOpeningState(OpeningState::PressedOneState);
         } else {
             resetOpening();
         }
-    }
-}
-
-void SecretMenuHandler::onDigitTwoClicked()
-{
-    if(m_openingState & (OpeningState::InactiveState | OpeningState::InitialState)) {
-        return;
-    }
-    if(m_openingState == OpeningState::PressedOneState) {
-        quint64 currentTimeElapsed = QDateTime::currentMSecsSinceEpoch() - beginOpeningTimestamp();
-        if(currentTimeElapsed <= 5000)  {
+        break;
+    case Button::ButtonType::DigitTwo:
+        if(m_openingState == OpeningState::PressedOneState) {
             setOpeningState(OpeningState::PressedTwoState);
         } else {
             resetOpening();
         }
-    }
-}
-
-void SecretMenuHandler::onDigitThreeClicked()
-{
-    if(m_openingState & (OpeningState::InactiveState | OpeningState::InitialState | OpeningState::PressedOneState)) {
-        return;
-    }
-    if(m_openingState == OpeningState::PressedTwoState) {
-        quint64 currentTimeElapsed = QDateTime::currentMSecsSinceEpoch() - beginOpeningTimestamp();
-        if(currentTimeElapsed <= 5000)  {
+        break;
+    case Button::ButtonType::DigitThree:
+        if(m_openingState == OpeningState::PressedTwoState) {
             setOpeningState(OpeningState::PressedThreeState);
             emit openMenu();
         } else {
             resetOpening();
         }
+        break;
+    default:
+        resetOpening();
+        break;
     }
-}
-
-void SecretMenuHandler::onWrongButtonClicked()
-{
-    resetOpening();
 }

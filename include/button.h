@@ -9,7 +9,7 @@ class Button : public QObject
 public:
 
     enum ButtonType {
-        AllClean = Qt::UserRole + 2,
+        Brackets = Qt::UserRole + 2,
         Negative,
         Percent,
         Division,

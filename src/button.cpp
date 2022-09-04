@@ -12,10 +12,10 @@ Button::Button(ButtonType type, QObject *parent)
 {
     Q_UNUSED(parent)
     switch(m_type) {
-    case ButtonType::AllClean:
-        setColor("#F25E5E");
-        setColorActive("#FFA07A");
-        setIconPath("../icons/ac.png");
+    case ButtonType::Brackets:
+        setColor("#0889A6");
+        setColorActive("#F7E425");
+        setIconPath("../icons/bkt.png");
         break;
     case ButtonType::Negative:
         setColor("#0889A6");
